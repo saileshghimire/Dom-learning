@@ -9,14 +9,69 @@
     function populateDiv(){
         const a = document.getElementById("firstnumber").value;
         const b = document.getElementById("secondnumber").value;
-        const element = document.getElementById("finalsum")
-        element.innerHTML = parseInt(a) + parseInt(b);
+        
+        // element.innerHTML = parseInt(a) + parseInt(b);
+
+        fetch("https://sum-server.100xdevs.com/sum?a="+a+"&b="+b)
+        .then(function(response){
+            console.log(response);
+            response.text().then(function(ans){
+                document.getElementById("finalsum").innerHTML = ans
+            })
+
+        })
     }
+// cleaner way of doing this is:
+    async function populateDiv2(){
+        const a = document.getElementById("firstnumber").value;
+        const b = document.getElementById("secondnumber").value;
+        const response = await fetch("https://sum-server.100xdevs.com/sum?a="+a+"&b="+b);
+        const ans = await response.text();
+        document.getElementById("finalsum").innerHTML = ans
+    }
+
+    async function populateDiv3(){
+        const p= document.getElementById("principal").value;
+        const r = document.getElementById("rate").value;
+        const t = document.getElementById("time").value;
+        const response = await fetch("https://sum-server.100xdevs.com/interest?principal="+p+"&rate="+r+"&time="+t);
+        const interestans = await response.text();
+        document.getElementById("interestans").innerHTML = interestans;
+    }
+    let timeout;
+    function debouncePopulateDiv4(){
+        clearTimeout(timeout);
+        timeout = setTimeout(function(){
+            populateDiv4()
+        },1000)
+    }
+    async function populateDiv4(){
+        const a = document.getElementById("firstnumber").value;
+        const b = document.getElementById("secondnumber").value;
+        const response = await fetch("https://sum-server.100xdevs.com/sum?a="+a+"&b="+b);
+        const ans = await response.text();
+        document.getElementById("finalsum1").innerHTML = ans
+    }
+
 </script>
 <body>
-    <input id="firstnumber" type="text" placeholder="First number"> <br>
+    <!-- <input id="firstnumber" type="text" placeholder="First number"> <br>
     <input id="secondnumber" type="text" placeholder="Second number"> <br>
-    <button onclick="populateDiv()"> calculate sum</button>
+    <button onclick="populateDiv2()"> calculate sum</button>
     <div id="finalsum"></div>
+    <br> -->
+    <div class="interest">
+        <input id="principal" type="text" placeholder="principal"> <br>
+        <input id="rate" type="text" placeholder="rate"> <br>
+        <input id="time" type="text" placeholder="time"> <br>
+        <button onclick="populateDiv3()"> calculate sum</button>
+        <div id="interestans"></div>
+    </div>
+    <!-- debounce -->
+    <div class="debounce">
+        <input oninput="debouncePopulateDiv4()" id="firstnumber" type="text" placeholder="First number"> <br>
+    <input oninput="debouncePopulateDiv4()"    id="secondnumber" type="text" placeholder="Second number"> <br>
+    <div id="finalsum1"></div>
+    </div>
 </body>
 </html>
